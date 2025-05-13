@@ -1,0 +1,32 @@
+
+Systems:
+Math Helpers
+Cameras
+Player Controls
+Start Screen
+Object Pools
+
+Gameplay:
+Player ship
+AI Ship Friend and Foe
+Target Management
+Weapons Player And AI
+Health and Damage
+Death System
+Levels
+HUD
+Radar
+Targeting AI And Player
+
+Assets:
+Spaceships 
+Effects
+Sounds
+Shaders
+Music
+
+
+
+
+Deadline : 2 months 13 days
+

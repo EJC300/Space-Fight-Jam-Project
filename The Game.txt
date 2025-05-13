@@ -1,0 +1,23 @@
+Space Fight Jam:
+
+Solar Shield: UFO
+
+About:
+A Spacefighter game about taking down UFOs within Earth and the Moon’s gravity well.
+
+Synopsis: 
+You have been selected by the shadowy Solar Shield program of the global shadow government to fly the TR-48 “Dulce”. Do what you must to prevent unauthorized xenos from pillaging the populace you and your fellow pilots must prevent that form happening. 
+
+Features:
+Traditional space fighter gameplay
+Power Management 
+Fire energy weapons and missiles
+AI controlled spaceships friend and foe.
+2 Levels
+
+Stretch Goals:
+6 levels
+AI Wingman System
+…
+
+Time to complete 2 months 13 days
