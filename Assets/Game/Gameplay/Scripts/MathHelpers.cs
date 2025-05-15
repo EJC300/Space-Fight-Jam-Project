@@ -14,7 +14,7 @@ namespace Utilities
 
         public static float SmoothDamp(float start,float end,float dt,float damp)
         {
-            return Mathf.Lerp(start, end, Mathf.Abs(1 - Mathf.Lerp(0, end, dt) * Time.deltaTime));
+            return Mathf.Lerp(start, end,(1 - Mathf.Exp(-damp * dt) ));
         }
         public static Vector3 SmoothDamp(Vector3 start, Vector3 end, float dt, float damp)
         {

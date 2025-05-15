@@ -52,11 +52,11 @@ public class PlayerInput : MonoBehaviour
      
         if(Mouse.current.scroll.ReadValue().y > 0)
         {
-            throttleInput += 10;
+            throttleInput += 1;
         }
         else if (Mouse.current.scroll.ReadValue().y < 0)
         {
-            throttleInput -= 10;
+            throttleInput -= 1;
         }
         throttleInput = Mathf.Clamp(throttleInput, 0, 100);
         return throttleInput;

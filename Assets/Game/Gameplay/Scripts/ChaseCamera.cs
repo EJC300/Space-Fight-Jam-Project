@@ -20,20 +20,20 @@ namespace Utilities
         public void Start()
         {
             targetUp = target.transform.up;
-           
+       
+
         }
 
         private void FixedUpdate()
         {
-            offset = Vector3.up * height - Vector3.forward * ( lookOffset);
             Vector3 cross = Vector3.Cross(transform.forward, target.transform.right);
-
+            offset = new Vector3(0, height, -lookOffset);
             targetUp = Vector3.Lerp(targetUp, cross, Time.deltaTime * currectionSpeed );
             offset = target.position + (target.rotation * offset);
-            transform.position = MathHelpers.SmoothDamp(transform.position,offset,Time.deltaTime,damping);
-            Vector3 direction = (target.position - transform.position + transform.forward * lookOffset).normalized;
+            transform.position =Vector3.Lerp(transform.position,offset,Time.fixedDeltaTime *damping);
+            Vector3 direction = ( target.position - transform.position);
             Quaternion lookRotation = Quaternion.LookRotation(direction, targetUp);
-            transform.rotation = MathHelpers.SmoothDamp(transform.rotation, lookRotation,Time.deltaTime,lookDamping);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation,Time.fixedDeltaTime * lookDamping);
 
 
         }
