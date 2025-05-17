@@ -25,6 +25,8 @@ Sounds
 Shaders
 Music
 
+Stretch Goals:
+	Gamepad Support
 
 
 

@@ -461,14 +461,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b7a090464980d147993f0ffdd0702ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 742584622}
-  damping: 0.5
-  lookDamping: 1
+  damping: 5
+  lookDamping: 25
   currectionSpeed: 5
   lookOffset: 20
   height: 2
@@ -627,7 +627,7 @@ GameObject:
   - component: {fileID: 742584626}
   - component: {fileID: 742584627}
   m_Layer: 0
-  m_Name: Spaceship
+  m_Name: TestSpaceship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -763,11 +763,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81aced7642ff5b04587b0292711cdef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxShield: 100
   plane: {fileID: 963194168}
   PitchSpeed: 1
   YawSpeed: 1
-  RollSpeed: 1
-  MaxSpeed: 25
+  RollSpeed: 5
+  MaxSpeed: 50
   AccelerationRate: 5
   Speed: 5
 --- !u!1 &832575517

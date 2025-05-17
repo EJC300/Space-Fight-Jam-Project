@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using Utilities;
 
 public class PlayerShip : MonoBehaviour
@@ -25,43 +26,42 @@ public class PlayerShip : MonoBehaviour
     private float shieldUp;
     private float shieldDown;
     private float weaponPower;
-    private bool powerToShields;
-    private bool powerToWeapons;
+    private float enginePower;
     private float reactorPowerRate;
     private float weaponChargeRate;
+    private float capacity;
     private Rigidbody rb;
-
+    private bool canUseByPower;
     Quaternion upRotation;
 
     private void Start()
     {
         rb= GetComponent<Rigidbody>();
+        IntiliazePower();
     }
 
-    private void ShieldBehavior()
+   
+
+    void PowerFromReactor(ref float from,ref float to)
     {
-        shieldDown = MathHelpers.SmoothDamp(shieldDown,MaxShield,Time.deltaTime,reachageRate);
-        shieldUp = MathHelpers.SmoothDamp(shieldUp, MaxShield, Time.deltaTime, reachageRate);
-        shieldLeft = MathHelpers.SmoothDamp(shieldLeft, MaxShield, Time.deltaTime, reachageRate);
-        shieldRight = MathHelpers.SmoothDamp(shieldDown, MaxShield, Time.deltaTime, reachageRate);
+        float amount = 1;
+        capacity -= amount;
       
-        Debug.Log("ShieldDown " + shieldDown + "ShieldUp" + shieldUp + "ShieldLeft" + shieldLeft + "ShieldRight " + shieldRight);
+        from -= amount;
+        to += amount;
+        to = Mathf.Clamp(to, 0, 100);
+        from = Mathf.Clamp(from, 0, 100);
+     
+        if (from > to)
+        {
+            capacity += amount;
+        }
+        Debug.Log("from" + to);
+        
     }
 
-    private void WeaponPowerCharge()
-    {
-        weaponPower = MathHelpers.SmoothDamp(weaponPower,MaxShield,Time.deltaTime,weaponChargeRate);
-        Debug.Log("Weapon Power" + weaponPower);
-    }
-    private void ReactorBehavior()
-    {
-        float powerDrain = (shieldDown + shieldLeft + shieldRight + shieldUp + weaponPower);
-        powerDrain = Mathf.Clamp(powerDrain, 0.0f, 1);
-        float maxPowerFromDrain = 100 - powerDrain;
-      
-            currentPower =  MathHelpers.SmoothDamp(currentPower, 100 - powerDrain, Time.deltaTime, reactorPowerRate) - powerDrain * Time.deltaTime;
-        Debug.Log("currentPower" + currentPower);
-    }
+
+ 
     private void ThrottleToThrust()
     {
         currentSpeed = MathHelpers.SmoothDamp(currentSpeed, Singleton.instance.PlayerInput.Throttle()/ Speed, Time.deltaTime, AccelerationRate);
@@ -111,46 +111,65 @@ public class PlayerShip : MonoBehaviour
     //Very Basic Power Management
     public void PowerManagement()
     {
-        //Power To shields
-        if (Singleton.instance.PlayerInput.PowerToShields())
-        {
-            powerToShields = true;
-
-
-        }
-        if(Singleton.instance.PlayerInput.PowerToWeapons())
-        {
-            powerToWeapons = true;
-        }
-
-        if(Singleton.instance.PlayerInput.ResetPower())
-        {
-            powerToShields=  false;
-
-            reactorPowerRate = 1f;
-        }
-
-        if (powerToShields)
-        {
-            reachageRate = 10;
-
-            reactorPowerRate = 0.5f;
-
-           
+        /*Power increases at a rate. Each time a power is added to a system capacity is lowered by 1
+         * This takes power from another system as well
+         * when system is used or effected such weapons firing and shields recharging to maxiumum strength the power is drained
+         * if power is < 1 then all systems won't work
+         */
+        currentPower += 1;
+        PlayerInput input = Singleton.instance.PlayerInput;
         
-         
-        }
-        if(powerToWeapons)
+        if(input.PowerToEngines() )
         {
-            reactorPowerRate = 0.3f;
-            weaponChargeRate = 10;
+            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            PowerFromReactor(ref shieldPower,ref enginePower);
+            PowerFromReactor(ref weaponPower,ref enginePower);
+            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
         }
+        if (input.PowerToShields())
+        {
+            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            
+            PowerFromReactor(ref weaponPower,ref shieldPower);
+            PowerFromReactor(ref enginePower, ref shieldPower);
+            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
+        }
+        if (input.PowerToWeapons())
+        {
+            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            PowerFromReactor(ref shieldPower, ref weaponPower);
+            PowerFromReactor(ref enginePower,ref weaponPower);
+            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
+        }
+
+        if(input.ResetPower())
+        { 
+                capacity = 100;
+            weaponPower = currentPower * 0.5f;
+
+                shieldUp = shieldDown = shieldLeft = shieldRight = currentPower * 0.5f;
+
+            enginePower = currentPower * 0.5f;
+
+          
+        }
+       Debug.Log($"shieldDown" + shieldDown + "shieldUp" + shieldUp + "shieldRight" + shieldRight + "shieldLeft" + shieldLeft);
+       Debug.Log("WeaponsPower" + weaponPower);
+      Debug.Log("EnginesPower" + enginePower);
+        Debug.Log("Power" + currentPower);
+
+ 
+        currentPower = Mathf.Clamp(currentPower,0, capacity);
+        
     }
+    void IntiliazePower()
+    {
+        currentPower = 100;
+        capacity = 100;
+    }
+    
     private void Update()
     {
-        ShieldBehavior();
-        ReactorBehavior();
-        WeaponPowerCharge();
         PowerManagement();
     }
     private void FixedUpdate()
