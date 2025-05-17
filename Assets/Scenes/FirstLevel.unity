@@ -767,7 +767,7 @@ MonoBehaviour:
   plane: {fileID: 963194168}
   PitchSpeed: 1
   YawSpeed: 1
-  RollSpeed: 5
+  RollSpeed: 3
   MaxSpeed: 50
   AccelerationRate: 5
   Speed: 5

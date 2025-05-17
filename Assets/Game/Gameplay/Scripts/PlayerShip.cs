@@ -19,7 +19,6 @@ public class PlayerShip : MonoBehaviour
     float currentPitch = 0;
     float currentYaw = 0;
     float currentSpeed = 0;
-    private float reachageRate = 1f;
     private float currentPower;
     private float shieldLeft;
     private float shieldRight;
@@ -27,8 +26,6 @@ public class PlayerShip : MonoBehaviour
     private float shieldDown;
     private float weaponPower;
     private float enginePower;
-    private float reactorPowerRate;
-    private float weaponChargeRate;
     private float capacity;
     private Rigidbody rb;
     private bool canUseByPower;
@@ -45,19 +42,16 @@ public class PlayerShip : MonoBehaviour
     void PowerFromReactor(ref float from,ref float to)
     {
         float amount = 1;
-        capacity -= amount;
+    
       
         from -= amount;
         to += amount;
         to = Mathf.Clamp(to, 0, 100);
         from = Mathf.Clamp(from, 0, 100);
      
-        if (from > to)
-        {
-            capacity += amount;
-        }
+       
         Debug.Log("from" + to);
-        
+       
     }
 
 
@@ -76,7 +70,65 @@ public class PlayerShip : MonoBehaviour
        
     }
 
- 
+    //For each direction determine how much shield damage is done to specific shield side if a shield side reaches zero damage can be taken on that side
+    private void ApplyDamage()
+    {
+        if(shieldLeft < 0 || shieldRight < 0 || shieldUp < 0 || shieldDown < 0)
+        {
+           //Do Damage
+        }
+      
+    }
+
+    private void RechargeShields()
+    {
+        if (shieldLeft < 100 || shieldRight < 100 || shieldUp < 100 || shieldDown < 100)
+        {
+            shieldUp += shieldUp * 0.01f;
+            currentPower -= shieldUp;
+            shieldDown += shieldDown * 0.01f;
+            currentPower -= shieldDown;
+
+            shieldLeft += shieldLeft * 0.01f;
+            currentPower -= shieldLeft;
+
+            shieldRight += shieldRight * 0.01f; 
+            currentPower -= shieldRight;
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        Vector3 directionToCollision = collision.transform.position - transform.position;
+
+        float front = Vector3.Dot(directionToCollision, transform.forward);
+        float back = Vector3.Dot(directionToCollision, -transform.forward);
+        float left = Vector3.Dot(directionToCollision, -transform.right);
+        float right = Vector3.Dot(directionToCollision, transform.right);
+        
+        
+        if(front < 0.9f)
+        {
+            shieldUp -= 1;
+        }
+        if(back < 0.9f)
+        {
+            shieldDown -= 1;
+        }
+
+        if(left < 0.9f)
+        {
+            shieldLeft -= 1;
+        }
+
+        if(right < 0.9f)
+        {
+            shieldRight -= 1;
+        }
+
+
+    }
+
+
     public void PitchYawRoll()
     {
        currentRoll =  MathHelpers.SmoothDamp(currentRoll, Singleton.instance.PlayerInput.RollInput() * RollSpeed, Time.deltaTime, YawSpeed);
@@ -94,14 +146,15 @@ public class PlayerShip : MonoBehaviour
         plane.localRotation = eulerPlane;
     }
 
-    public void SetMaxVelocity()
-    {
-
-    }
+ 
 
     public void SelectFireWeapons()
     {
-
+        PlayerInput input = Singleton.instance.PlayerInput;
+        if(input.FireSelectedWeapons() && canUseByPower)
+        {
+            currentPower -= (weaponPower/100) * 5;
+        }
     }
 
     public void SecondaryWeapons()
@@ -156,11 +209,12 @@ public class PlayerShip : MonoBehaviour
        Debug.Log($"shieldDown" + shieldDown + "shieldUp" + shieldUp + "shieldRight" + shieldRight + "shieldLeft" + shieldLeft);
        Debug.Log("WeaponsPower" + weaponPower);
       Debug.Log("EnginesPower" + enginePower);
-        Debug.Log("Power" + currentPower);
+        Debug.Log("CurrentPower" + currentPower);
 
- 
+        canUseByPower = currentPower > 0;
         currentPower = Mathf.Clamp(currentPower,0, capacity);
-        
+        float maxSpeedFromEnginePower=  100*(enginePower/currentPower);
+        MaxSpeed = 2 * maxSpeedFromEnginePower;
     }
     void IntiliazePower()
     {
@@ -171,12 +225,15 @@ public class PlayerShip : MonoBehaviour
     private void Update()
     {
         PowerManagement();
+        SelectFireWeapons();
+        RechargeShields();
     }
     private void FixedUpdate()
     {
        
         ThrottleToThrust();
         PitchYawRoll();
+ 
        
     }
 }
