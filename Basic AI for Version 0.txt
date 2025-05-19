@@ -1,0 +1,10 @@
+Simple AI
+
+Must Complete Objectives:
+
+Chase When Enemy Is In Range(Sorted by damage)
+Flee when health is low
+Lead and Fire At Target
+Avoid Collisions
+
+

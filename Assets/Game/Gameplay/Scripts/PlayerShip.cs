@@ -19,7 +19,13 @@ public class PlayerShip : MonoBehaviour
     float currentPitch = 0;
     float currentYaw = 0;
     float currentSpeed = 0;
+    float health = 100;
     private float currentPower;
+    private float shieldLeftPower;
+    private float shieldRightPower;
+    private float shieldUpPower;
+    private float shieldDownPower;
+
     private float shieldLeft;
     private float shieldRight;
     private float shieldUp;
@@ -69,60 +75,76 @@ public class PlayerShip : MonoBehaviour
     {
        
     }
+    private void ReachargeShield()
+    {
+     
+        if(shieldUpPower > 0)
+        {
+            shieldUp = MathHelpers.SmoothDamp(shieldUp,MaxShield,Time.deltaTime, shieldUpPower);
+            currentPower -= (shieldUpPower / 100) *5;
+        }
+        
+        if (shieldDownPower > 0)
+        {
+            shieldDown = MathHelpers.SmoothDamp(shieldDown, MaxShield, Time.deltaTime, shieldDownPower);
+            currentPower -= (shieldDownPower / 100) * 5;
+        }
+      
+        if (shieldLeftPower > 0)
+        {
+            shieldLeft = MathHelpers.SmoothDamp(shieldLeft, MaxShield, Time.deltaTime, shieldLeftPower);
+            currentPower -= (shieldLeftPower / 100) * 5;
+        }
+       
 
+        if (shieldRightPower > 0)
+        {
+            shieldRight = MathHelpers.SmoothDamp(shieldRight, MaxShield, Time.deltaTime, shieldRightPower);
+            currentPower -= (shieldRightPower / 100) * 5;
+        }
+     
+    
+    }
     //For each direction determine how much shield damage is done to specific shield side if a shield side reaches zero damage can be taken on that side
     private void ApplyDamage()
     {
         if(shieldLeft < 0 || shieldRight < 0 || shieldUp < 0 || shieldDown < 0)
         {
-           //Do Damage
+            //Replace with compoennt model
+            health -= 1;
         }
       
     }
 
-    private void RechargeShields()
-    {
-        if (shieldLeft < 100 || shieldRight < 100 || shieldUp < 100 || shieldDown < 100)
-        {
-            shieldUp += shieldUp * 0.01f;
-            currentPower -= shieldUp;
-            shieldDown += shieldDown * 0.01f;
-            currentPower -= shieldDown;
 
-            shieldLeft += shieldLeft * 0.01f;
-            currentPower -= shieldLeft;
-
-            shieldRight += shieldRight * 0.01f; 
-            currentPower -= shieldRight;
-        }
-    }
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 directionToCollision = collision.transform.position - transform.position;
+        Vector3 directionToCollision = collision.contacts[0].normal;
+        directionToCollision.Normalize();
 
-        float front = Vector3.Dot(directionToCollision, transform.forward);
-        float back = Vector3.Dot(directionToCollision, -transform.forward);
-        float left = Vector3.Dot(directionToCollision, -transform.right);
-        float right = Vector3.Dot(directionToCollision, transform.right);
+        float front = Vector3.Dot(directionToCollision, -transform.forward);
+        float back = Vector3.Dot(directionToCollision, transform.forward);
+        float left = Vector3.Dot(directionToCollision, transform.right);
+        float right = Vector3.Dot(directionToCollision, -transform.right);
         
         
-        if(front < 0.9f)
+        if(front > 0.9f)
         {
-            shieldUp -= 1;
+            shieldUp -= 50;
         }
-        if(back < 0.9f)
+        if(back > 0.9f)
         {
-            shieldDown -= 1;
-        }
-
-        if(left < 0.9f)
-        {
-            shieldLeft -= 1;
+            shieldDown -= 50;
         }
 
-        if(right < 0.9f)
+        if(left > 0.9f)
         {
-            shieldRight -= 1;
+            shieldLeft -= 50;
+        }
+
+        if(right < -0.9f)
+        {
+            shieldRight -= 50;
         }
 
 
@@ -174,25 +196,25 @@ public class PlayerShip : MonoBehaviour
         
         if(input.PowerToEngines() )
         {
-            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            var shieldPower = shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower;
             PowerFromReactor(ref shieldPower,ref enginePower);
             PowerFromReactor(ref weaponPower,ref enginePower);
-            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
+            shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower = shieldPower;
         }
         if (input.PowerToShields())
         {
-            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            var shieldPower = shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower;
             
             PowerFromReactor(ref weaponPower,ref shieldPower);
             PowerFromReactor(ref enginePower, ref shieldPower);
-            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
+            shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower = shieldPower;
         }
         if (input.PowerToWeapons())
         {
-            var shieldPower = shieldUp = shieldDown = shieldLeft = shieldRight;
+            var shieldPower = shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower;
             PowerFromReactor(ref shieldPower, ref weaponPower);
             PowerFromReactor(ref enginePower,ref weaponPower);
-            shieldUp = shieldDown = shieldLeft = shieldRight = shieldPower;
+            shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower = shieldPower;
         }
 
         if(input.ResetPower())
@@ -200,13 +222,13 @@ public class PlayerShip : MonoBehaviour
                 capacity = 100;
             weaponPower = currentPower * 0.5f;
 
-                shieldUp = shieldDown = shieldLeft = shieldRight = currentPower * 0.5f;
+                shieldUpPower = shieldDownPower = shieldLeftPower = shieldRightPower = currentPower * 0.5f;
 
             enginePower = currentPower * 0.5f;
 
           
         }
-       Debug.Log($"shieldDown" + shieldDown + "shieldUp" + shieldUp + "shieldRight" + shieldRight + "shieldLeft" + shieldLeft);
+       Debug.Log($"shieldDown" + shieldDownPower + "shieldUp" + shieldUpPower + "shieldRight" + shieldRightPower + "shieldLeft" + shieldLeftPower);
        Debug.Log("WeaponsPower" + weaponPower);
       Debug.Log("EnginesPower" + enginePower);
         Debug.Log("CurrentPower" + currentPower);
@@ -226,13 +248,14 @@ public class PlayerShip : MonoBehaviour
     {
         PowerManagement();
         SelectFireWeapons();
-        RechargeShields();
+
     }
     private void FixedUpdate()
     {
        
         ThrottleToThrust();
         PitchYawRoll();
+        ReachargeShield();
  
        
     }

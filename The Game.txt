@@ -1,6 +1,6 @@
 Space Fight Jam:
 
-Solar Shield: UFO
+Solar Shield
 
 About:
 A Spacefighter game about taking down UFOs within Earth and the Moon’s gravity well.
@@ -18,6 +18,6 @@ AI controlled spaceships friend and foe.
 Stretch Goals:
 6 levels
 AI Wingman System
-…
+Gamepad Support
 
 Time to complete 2 months 13 days
