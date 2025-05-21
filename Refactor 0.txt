@@ -1,0 +1,23 @@
+Refactor of the Project
+
+
+
+Refactor 0:
+SpaceShip:
+
+
+Player Controller
+Weapons Components
+Spaceship Engine
+Spaceship Health
+Spaceship Shields
+
+AI SpacShip
+AI Bot       
+AI Controller – Locomotion and Weapons
+Shield And Health 
+No PowerManagement
+
+
+
+
