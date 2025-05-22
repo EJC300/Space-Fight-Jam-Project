@@ -628,6 +628,8 @@ GameObject:
   - component: {fileID: 742584629}
   - component: {fileID: 742584628}
   - component: {fileID: 742584627}
+  - component: {fileID: 742584631}
+  - component: {fileID: 742584630}
   m_Layer: 0
   m_Name: TestSpaceship
   m_TagString: Untagged
@@ -808,6 +810,40 @@ MonoBehaviour:
   acceleration: 0
   adjustedSpeed: 0
   afterburner: 0
+--- !u!114 &742584630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742584621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a8fc3436683a143a67edff0a057263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rechargeRate: 25
+  powerDraw: 0
+  shieldUp: 100
+  shieldDown: 100
+  shieldLeft: 100
+  shieldRight: 100
+  health: 1000
+--- !u!114 &742584631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742584621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 385a29cf83f88c54991b99be6e478083, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPower: 1200
+  rechargeRate: 25
+  currentPower: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

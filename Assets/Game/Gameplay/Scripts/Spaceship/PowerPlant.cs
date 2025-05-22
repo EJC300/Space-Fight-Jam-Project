@@ -1,16 +1,25 @@
 using UnityEngine;
+using Utilities;
 
 public class PowerPlant : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float maxPower;
 
-    // Update is called once per frame
-    void Update()
+    [SerializeField] private float rechargeRate;
+
+    [HideInInspector] public float currentPower;
+
+    private void GeneratePower() => currentPower = MathHelpers.SmoothDamp(currentPower, maxPower, Time.deltaTime, rechargeRate);
+
+    public void DrainPower(float amount)
     {
-        
+        currentPower -= amount * Time.deltaTime;
+        currentPower = Mathf.Clamp(currentPower, 0, maxPower);
     }
+    private void Update()=> GeneratePower();
+   
 }
+
+
+
+

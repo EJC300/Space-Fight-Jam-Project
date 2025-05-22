@@ -3,42 +3,55 @@ using UnityEngine;
 
 public class ShieldsAndHealth : MonoBehaviour, IDamageable
 {
-    private float rechargeRate;
-    private float powerDraw;
-    private float shieldUp, shieldDown, shieldLeft, shieldRight;
-    private float health;
+    private PowerPlant PowerPlant { get {  return GetComponent<PowerPlant>(); } }
+    
+    [SerializeField] float rechargeRate;
+    [SerializeField] float powerDraw;
+    [SerializeField] float shieldUp, shieldDown, shieldLeft, shieldRight;
+    [SerializeField] float health;
+
     //Call from PowerPlant Script
     public void RechargeShield(ref float currentPower)
     {
-       float totalShield = shieldUp + shieldDown + shieldRight + shieldLeft;
-        totalShield = Mathf.Clamp(totalShield, 0, 1);
-        if(totalShield < 1f)
+     
+       
+        if(shieldDown < 100 || shieldLeft <100 || shieldUp < 100 || shieldRight < 100)
         {
+        
             shieldUp    += rechargeRate;
             shieldDown  += rechargeRate;
             shieldLeft  += rechargeRate;
             shieldRight += rechargeRate;
             currentPower -= powerDraw;
         }
-       
+        shieldUp = Mathf.Clamp(shieldUp,0,100);
+        shieldDown = Mathf.Clamp(shieldDown, 0, 100);
+        shieldRight = Mathf.Clamp(shieldRight, 0, 100);
+        shieldLeft = Mathf.Clamp(shieldLeft, 0, 100);
     }
     private void KillSelf()
     {
       if(health< 0f)
         {
             //Explode or do ship death
+            Destroy(gameObject);
         }
     }
     public float ApplyDamage(int damage)
     {
         powerDraw += damage * 0.5f;
-        powerDraw = Mathf.Clamp(powerDraw, 0, 10f);
+
         if(shieldUp < 0 || shieldDown < 0|| shieldRight < 0 || shieldLeft < 0)
         {
             //Damage
             health -= damage;
         }
-        return damage;
+        if (powerDraw > 0f)
+        {
+            PowerPlant.DrainPower(powerDraw);
+        }
+            return damage;
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -80,6 +93,7 @@ public class ShieldsAndHealth : MonoBehaviour, IDamageable
     }
     void Update()
     {
-        
+        powerDraw = Mathf.Clamp(powerDraw, 0, 10f);
+        RechargeShield(ref PowerPlant.currentPower);
     }
 }
