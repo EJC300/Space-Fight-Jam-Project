@@ -5,6 +5,8 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private float sensitivityY;
     [SerializeField] private float sensitivityX;
     float throttleInput = 0;
+    float strafeInput = 0;
+    float strafeUpInput = 0;
     //TODO support remapping.
     public bool OnExitToMenu()
     {       // This method is called when the player wants to exit to the main menu.
@@ -50,20 +52,44 @@ public class PlayerInput : MonoBehaviour
         
        
      
-        if(Mouse.current.scroll.ReadValue().y > 0)
+        if(Keyboard.current.wKey.wasPressedThisFrame)
         {
             throttleInput += 1;
         }
-        else if (Mouse.current.scroll.ReadValue().y < 0)
+        else if (Keyboard.current.sKey.wasPressedThisFrame)
         {
             throttleInput -= 1;
         }
-        throttleInput = Mathf.Clamp(throttleInput, 0, 100);
+        throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
         return throttleInput;
     }
 
-
-   
+    public float Strafe()
+    {
+        if (Keyboard.current.aKey.wasPressedThisFrame)
+        {
+            strafeInput += 1;
+        }
+        else if (Keyboard.current.dKey.wasPressedThisFrame)
+        {
+            strafeInput -= 1;
+        }
+        strafeInput = Mathf.Clamp(strafeInput, -1f, 1f);
+        return strafeInput;
+    }
+    public float StrafeUP()
+    {
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            strafeUpInput += 1;
+        }
+        else if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            strafeUpInput -= 1;
+        }
+        strafeUpInput = Mathf.Clamp(strafeUpInput, -1f, 1f);
+        return strafeUpInput;
+    }
     // Switch weapons
     public bool SwitchWeaponsInput()
     {
