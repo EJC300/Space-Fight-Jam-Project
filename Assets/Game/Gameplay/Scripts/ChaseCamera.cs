@@ -15,6 +15,7 @@ namespace Utilities
 
         [SerializeField] private float currectionSpeed;
         [SerializeField] private float lookOffset;
+        [SerializeField] private float lookAhead;
         [SerializeField] private float height;
         private Vector3 offset;
         public void Start()
@@ -29,10 +30,10 @@ namespace Utilities
             Vector3 cross = Vector3.Cross(transform.forward, target.transform.right);
             offset = new Vector3(0, height, -lookOffset);
             targetUp = Vector3.Lerp(targetUp, cross, Time.deltaTime * currectionSpeed );
-            offset = target.position + (target.rotation * offset);
+            offset = target.position + ( target.rotation * offset);
             transform.position =Vector3.Lerp(transform.position,offset,Time.fixedDeltaTime *damping);
-            Vector3 direction = ( target.position - transform.position);
-            Quaternion lookRotation = Quaternion.LookRotation(direction, targetUp);
+            Vector3 direction = ( target.position +  target.transform.forward * lookAhead - transform.position);
+            Quaternion lookRotation = Quaternion.LookRotation(direction , targetUp);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation,Time.fixedDeltaTime * lookDamping);
 
 

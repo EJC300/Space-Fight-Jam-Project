@@ -12,6 +12,10 @@ public class PlayerShip : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float currentPitch, currentYaw,currentRoll;
     [SerializeField] private Transform plane;
+    [SerializeField] private Vector3 muzzlePos;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private float fireRate;
+    private float nextFire;
     void MoveShip()
     {
         Vector3 forwardDirection = Vector3.forward * acceleration * Singleton.instance.PlayerInput.Throttle();
@@ -19,10 +23,18 @@ public class PlayerShip : MonoBehaviour
         Vector3 leftDirection = Vector3.right * acceleration * Singleton.instance.PlayerInput.Strafe();
         rb.AddRelativeForce(forwardDirection + upDirection + leftDirection);
     }
+    public void Shoot()
+    {
+        if(Time.deltaTime > nextFire  && Singleton.instance.PlayerInput.FireSelectedWeapons())
+        {
+            Instantiate(bullet,transform.position + muzzlePos, transform.rotation);
+            nextFire = fireRate + Time.deltaTime;
+        }
+    }
     public void PitchYawRoll(float pitchInput, float yawInput, float rollInput)
     {
 
-        currentRoll = MathHelpers.SmoothDamp(currentRoll, rollInput * rotationSpeed, Time.deltaTime, rotationSpeed);
+        currentRoll = MathHelpers.SmoothDamp(currentRoll, rollInput * rotationSpeed * 25, Time.deltaTime, rotationSpeed);
         currentPitch = MathHelpers.SmoothDamp(currentPitch, pitchInput * rotationSpeed, Time.deltaTime, rotationSpeed);
         currentYaw = MathHelpers.SmoothDamp(currentYaw, yawInput * rotationSpeed, Time.deltaTime, rotationSpeed);
         Quaternion PitchYaw = Quaternion.AngleAxis(currentPitch, Vector3.right) * Quaternion.AngleAxis(currentYaw, Vector3.up);
@@ -42,9 +54,13 @@ public class PlayerShip : MonoBehaviour
     private void Start()=> rb = GetComponent<Rigidbody>();
     private void Update()
     {
+        Shoot();
+    }
+    private void FixedUpdate()
+    {
         MoveShip();
         PitchYawRoll(Singleton.instance.PlayerInput.MouseInputPitch(), Singleton.instance.PlayerInput.MouseInputYaw(), Singleton.instance.PlayerInput.RollInput());
-
+      
     }
 
 

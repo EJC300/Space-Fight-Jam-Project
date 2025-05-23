@@ -1,16 +1,8 @@
 using UnityEngine;
-
+[RequireComponent (typeof(Rigidbody))]
 public class AIFlight : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    //Move Based On Rate
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //Rotate 
 }

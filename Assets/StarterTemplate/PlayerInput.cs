@@ -52,42 +52,55 @@ public class PlayerInput : MonoBehaviour
         
        
      
-        if(Keyboard.current.wKey.wasPressedThisFrame)
+        if(Keyboard.current.wKey.IsPressed())
         {
             throttleInput += 1;
         }
-        else if (Keyboard.current.sKey.wasPressedThisFrame)
+        else if (Keyboard.current.sKey.IsPressed())
         {
             throttleInput -= 1;
         }
-        throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
+        else
+        {
+            throttleInput = 0;
+        }
+       
+            throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
         return throttleInput;
     }
 
     public float Strafe()
     {
-        if (Keyboard.current.aKey.wasPressedThisFrame)
+        if (Keyboard.current.aKey.IsPressed())
         {
             strafeInput += 1;
         }
-        else if (Keyboard.current.dKey.wasPressedThisFrame)
+        else if (Keyboard.current.dKey.IsPressed())
         {
             strafeInput -= 1;
         }
-        strafeInput = Mathf.Clamp(strafeInput, -1f, 1f);
+        else
+        {
+            strafeInput = 0;
+        }
+            strafeInput = Mathf.Clamp(strafeInput, -1f, 1f);
         return strafeInput;
     }
     public float StrafeUP()
     {
-        if (Keyboard.current.rKey.wasPressedThisFrame)
+        if (Keyboard.current.rKey.IsPressed())
         {
             strafeUpInput += 1;
         }
-        else if (Keyboard.current.fKey.wasPressedThisFrame)
+        else if (Keyboard.current.fKey.IsPressed())
         {
             strafeUpInput -= 1;
         }
-        strafeUpInput = Mathf.Clamp(strafeUpInput, -1f, 1f);
+        else
+        {
+            strafeUpInput = 0;
+        }
+            strafeUpInput = Mathf.Clamp(strafeUpInput, -1f, 1f);
         return strafeUpInput;
     }
     // Switch weapons

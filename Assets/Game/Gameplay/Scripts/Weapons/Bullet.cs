@@ -8,9 +8,9 @@ public class Bullet : Damager
 
     [SerializeField] private Rigidbody rb;
 
-    private void Update()
+    private void FixedUpdate()
     {
-        rb.AddRelativeForce(Vector3.forward * speed);
+        rb.linearVelocity = speed * Vector3.forward;
         rb.maxLinearVelocity = speed;
         Destroy(this.gameObject,deathTime);
     }
