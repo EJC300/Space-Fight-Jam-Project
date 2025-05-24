@@ -353,8 +353,8 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.1222173, g: 0.11417661, b: 0.14465404, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -467,10 +467,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 742584622}
-  damping: 25
-  lookDamping: 50
+  damping: 10
+  lookDamping: 10
   currectionSpeed: 5
   lookOffset: 20
+  lookAhead: 25
   height: 2
 --- !u!114 &330585549
 MonoBehaviour:
@@ -642,8 +643,8 @@ Rigidbody:
   m_GameObject: {fileID: 742584621}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 1
+  m_Drag: 0.25
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -658,7 +659,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!4 &742584623
 Transform:
@@ -764,13 +765,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 25
-  maneuveringAcceleration: 50
-  rotationSpeed: 0.05
+  maneuveringAcceleration: 25
+  rotationSpeed: 1
   rb: {fileID: 0}
   currentPitch: 0
   currentYaw: 0
   currentRoll: 0
   plane: {fileID: 963194168}
+  muzzlePos: {x: 0, y: 0, z: 5}
+  bullet: {fileID: 8642804774441114689, guid: ec7f249a69278b040b45887cc2c40d71, type: 3}
+  fireRate: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

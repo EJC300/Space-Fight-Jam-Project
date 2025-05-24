@@ -171,7 +171,7 @@ public class PlayerInput : MonoBehaviour
     //Fire Selected Weapons
     public bool FireSelectedWeapons()
     {
-        return Mouse.current.leftButton.isPressed;
+        return Mouse.current.leftButton.wasPressedThisFrame;
     }
 
     //Fire Selected Missile

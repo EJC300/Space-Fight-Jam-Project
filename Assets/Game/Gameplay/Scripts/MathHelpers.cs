@@ -16,6 +16,13 @@ namespace Utilities
         {
             return Mathf.Lerp(start, end,(1 - Mathf.Exp(-damp * dt) ));
         }
+        public static Vector3 SmoothDamp(Vector3 start, Vector3 end,ref Vector3 velocity, float dt, float damp)
+        {
+            float x = SmoothDamp(start.x, end.x, dt, damp);
+            float y = SmoothDamp(start.y, end.y, dt, damp);
+            float z = SmoothDamp(start.z, end.z, dt, damp);
+            return new Vector3(x, y, z);
+        }
         public static Vector3 SmoothDamp(Vector3 start, Vector3 end, float dt, float damp)
         {
             float x = SmoothDamp(start.x, end.x, dt, damp);
@@ -23,7 +30,6 @@ namespace Utilities
             float z = SmoothDamp(start.z, end.z, dt, damp);
             return new Vector3(x, y, z);
         }
-
         public static Quaternion SmoothDamp(Quaternion start, Quaternion end, float dt, float damp)
         {
             Vector3 startEuler = SmoothDamp(start.eulerAngles, end.eulerAngles, dt, damp);

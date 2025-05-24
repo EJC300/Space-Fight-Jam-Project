@@ -10,7 +10,8 @@ public class Bullet : Damager
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = speed * Vector3.forward;
+        LevelController.instance.WrapAround(transform);
+        rb.linearVelocity = speed * transform.forward;
         rb.maxLinearVelocity = speed;
         Destroy(this.gameObject,deathTime);
     }

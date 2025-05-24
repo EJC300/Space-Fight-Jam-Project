@@ -25,10 +25,10 @@ public class PlayerShip : MonoBehaviour
     }
     public void Shoot()
     {
-        if(Time.deltaTime > nextFire  && Singleton.instance.PlayerInput.FireSelectedWeapons())
+        if( Time.time > nextFire  && Singleton.instance.PlayerInput.FireSelectedWeapons())
         {
-            Instantiate(bullet,transform.position + muzzlePos, transform.rotation);
-            nextFire = fireRate + Time.deltaTime;
+            Instantiate(bullet, transform.TransformPoint(muzzlePos), transform.localRotation);
+            nextFire = fireRate + Time.time;
         }
     }
     public void PitchYawRoll(float pitchInput, float yawInput, float rollInput)
@@ -50,11 +50,12 @@ public class PlayerShip : MonoBehaviour
         plane.localRotation = eulerPlane;
 
     }
-
+    
     private void Start()=> rb = GetComponent<Rigidbody>();
     private void Update()
     {
         Shoot();
+        
     }
     private void FixedUpdate()
     {
